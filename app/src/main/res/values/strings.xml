@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Recipe Manager</string>
+    <string name="new_recipe">New Recipe</string>
+    <string name="import_recipe">Import Recipe</string>
+    <string name="app_real_name">Recipe Manager</string>
+    <string name="recipe_viewer">Recipe Viewer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa </string>
+    <string name="options">Options</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="steps">Instructions</string>
+</resources>

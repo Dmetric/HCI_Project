@@ -1,0 +1,151 @@
+package com.application.hci_project.activities;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.Instrumentation;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.application.hci_project.ClientApplication;
+import com.application.hci_project.R;
+import com.application.hci_project.adapters.IngredientListAdapter;
+import com.application.hci_project.adapters.InstructionListAdapter;
+import com.application.hci_project.databinding.RecipeViewerBinding;
+import com.application.hci_project.databinding.ViewerOptionsBinding;
+import com.application.hci_project.datatypes.Recipe;
+
+public class RecipeViewer extends AppCompatActivity {
+    private Recipe recipe;
+    private RecipeViewerBinding binding;
+    private int position;
+    private IngredientListAdapter ingredientListAdapter;
+    private InstructionListAdapter instructionListAdapter;
+
+    private ActivityResultLauncher<Intent> activityResultLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>() {
+                        @Override
+                        public void onActivityResult(ActivityResult o) {
+                            int result = o.getResultCode();
+                            Intent data = o.getData();
+                            if (result==2)
+                                getActivity().finish();
+                        }
+                    }
+            );
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        binding = RecipeViewerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        Intent intent = getIntent();
+        position = (int) intent.getSerializableExtra("recipe");
+        //Get Recipe from extras
+        recipe = ((ClientApplication) getActivity().getApplication()).getRecipe(position);
+
+        //Set Recipe name to TextView
+        binding.recipeNameTXT.setText(recipe.getName());
+
+        //Add Adapter to Ingredient List
+        ingredientListAdapter=new IngredientListAdapter(getActivity(), recipe.getIngredients());
+        binding.ingredientListView.setAdapter(ingredientListAdapter);
+
+        //Add Adapter to Instruction List
+        instructionListAdapter=new InstructionListAdapter(getActivity(), recipe.getInstructions());
+        binding.instructionListView.setAdapter(instructionListAdapter);
+
+        //Collapse for cards
+        binding.collapseIngredients.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(binding.ingredientListView.getVisibility()== View.GONE){
+                    binding.ingredientListView.setVisibility(View.VISIBLE);
+                    binding.ingredientCard.getLayoutParams().height= 0;
+                    binding.collapseIngredients.setImageResource(R.drawable.arrow_up);
+                }else{
+                    binding.ingredientListView.setVisibility(View.GONE);
+                    binding.ingredientCard.getLayoutParams().height= ViewGroup.LayoutParams.WRAP_CONTENT;
+                    binding.collapseIngredients.setImageResource(R.drawable.arrow_down);
+                }
+            }
+        });
+
+        binding.collapseSteps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(binding.instructionListView.getVisibility()== View.GONE){
+                    binding.instructionListView.setVisibility(View.VISIBLE);
+                    binding.instructionCard.getLayoutParams().height= 0;
+                    binding.collapseSteps.setImageResource(R.drawable.arrow_up);
+                }else{
+                    binding.instructionListView.setVisibility(View.GONE);
+                    binding.instructionCard.getLayoutParams().height= ViewGroup.LayoutParams.WRAP_CONTENT;
+                    binding.collapseSteps.setImageResource(R.drawable.arrow_down);
+                }
+            }
+        });
+
+        binding.optButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog dialog = new Dialog(getActivity());
+                dialog.setCancelable(true);
+                ViewerOptionsBinding dialogBinding = ViewerOptionsBinding.inflate(getLayoutInflater());
+                dialog.setContentView(dialogBinding.getRoot());
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.show();
+                dialogBinding.editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), RecipeEditor.class);
+                        //Adding recipe as extra for new activity
+                        intent.putExtra("type", "Edit");
+                        intent.putExtra("recipe", position);
+                        //Starting Activity
+                        activityResultLauncher.launch(intent);
+                        dialog.dismiss();
+                    }
+                });
+                dialogBinding.shareButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    //    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        getActivity().finish();
+//    }
+
+    private Activity getActivity() {
+        return this;
+    }
+}

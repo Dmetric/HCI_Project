@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    app:cardBackgroundColor="@color/orange_l"
+    app:cardCornerRadius="16dp"
+    app:contentPadding="4dp"
+    app:contentPaddingLeft="8dp"
+    app:contentPaddingRight="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="visible"
+            app:buttonIconTint="@color/grey_d" />
+
+        <TextView
+            android:id="@+id/amountTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingVertical="8dp"
+            android:paddingRight="4dp"
+            android:text="amount" />
+
+        <TextView
+            android:id="@+id/measurementTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingVertical="8dp"
+            android:paddingRight="4dp"
+            android:text="measurement" />
+
+        <TextView
+            android:id="@+id/ingredientTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingVertical="8dp"
+            android:text="ingredient" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

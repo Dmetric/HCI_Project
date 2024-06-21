@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/colorPrimary"
+            android:text="@string/app_real_name"
+            android:textColor="@color/design_default_color_on_primary"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/opt_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:backgroundTint="?attr/colorOnPrimary"
+            android:hapticFeedbackEnabled="true"
+            android:shadowColor="@color/black"
+            android:text="Settings"
+            android:textColor="@color/orange_d2"
+            app:cornerRadius="45dp"
+            app:icon="@drawable/accessibility"
+            app:iconTint="@color/orange_d2"
+            app:rippleColor="?attr/colorControlHighlight"
+            app:strokeColor="@color/orange_d2"
+            app:strokeWidth="4dp" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/importRecipeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/import_recipe"
+            app:icon="@drawable/import_icon"
+            app:iconGravity="textStart"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/addRecipeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:defaultFocusHighlightEnabled="false"
+            android:text="@string/new_recipe"
+            app:icon="@drawable/add"
+            app:iconGravity="textStart"
+            app:layout_constraintBottom_toTopOf="@+id/importRecipeButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ListView
+            android:id="@+id/recipeListView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:fadeScrollbars="true"
+            android:scrollbarSize="4dp"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbarThumbVertical="?attr/colorPrimary"
+            android:scrollbars="vertical"
+            android:scrollingCache="false"
+            android:smoothScrollbar="true"
+            android:verticalScrollbarPosition="right"
+            app:layout_constraintBottom_toTopOf="@+id/addRecipeButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/recipe_item" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foregroundTint="@color/black"
+    app:cardBackgroundColor="@color/orange_l"
+    app:cardCornerRadius="16dp"
+    app:contentPadding="4dp"
+    app:contentPaddingLeft="8dp"
+    app:contentPaddingRight="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:id="@+id/instructionNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Step. " />
+
+        <TextView
+            android:id="@+id/instructionTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingRight="4dp"
+            android:text="instruction" />
+
+        <ImageButton
+            android:id="@+id/timerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:background="@drawable/rippledrawable"
+            android:clickable="true"
+            android:foreground="@drawable/rippledrawable"
+            android:foregroundTint="@color/grey_d"
+            android:scaleType="center"
+            android:visibility="gone"
+            app:srcCompat="@drawable/timer"
+            app:tint="@color/grey_d" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
