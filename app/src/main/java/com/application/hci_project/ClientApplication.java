@@ -1,9 +1,24 @@
 package com.application.hci_project;
 
 import android.app.Application;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 
 import com.application.hci_project.datatypes.Recipe;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.util.ArrayList;
 
 public class ClientApplication extends Application {
@@ -12,10 +27,13 @@ public class ClientApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.initializeList();
+//        this.initializeList();
+//        clearPrivateStorage();
+//        for(Recipe recipe: recipes){
+//            saveToInternalStorage(recipe);
+//        }
+        listInitFromFile();
     }
-
-
 
     public ArrayList<Recipe> getRecipes() {
         return recipes;
@@ -29,21 +47,148 @@ public class ClientApplication extends Application {
         this.recipes = recipes;
     }
 
+    public boolean alreadyExists(String name){
+        for(Recipe recipe: recipes){
+            if (recipe.getName().toLowerCase().equals(name.toLowerCase())) return true;
+        }
+        return false;
+    }
     public void addRecipe(Recipe recipe){
-        recipes.add(recipe);
+        Boolean alreadyExists = false;
+        for(int i =0;i<recipes.size();i++){
+            if(recipes.get(i).getName().toLowerCase().equals(recipe.getName().toLowerCase())){
+                recipes.set(i,recipe);
+                alreadyExists=true;
+                break;
+            }
+        }
+        if (!alreadyExists) recipes.add(recipe);
+        Gson gson = new Gson();
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(nameAsFile(recipe.getName()), Context.MODE_PRIVATE));
+            outputStreamWriter.write(gson.toJson(recipe));
+            outputStreamWriter.close();
+            Log.d("FILEADDED","nameAsFile(recipe.getName())");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeRecipe(int position){
+        File file = new File(getFilesDir(),nameAsFile(recipes.get(position).getName()));
+        file.delete();
         recipes.remove(position);
     }
     public void setRecipe(int i,Recipe recipe) {
         recipes.set(i,recipe);
     }
 
-    private void initializeList(){
-        Recipe pizza = new Recipe("Pizza");
-        Recipe burger = new Recipe("Burger");
+    private void saveToInternalStorage(Recipe recipe){
+        Gson gson = new Gson();
+        String json = gson.toJson(recipe);
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(nameAsFile(recipe.getName()), Context.MODE_PRIVATE));
+            outputStreamWriter.write(json);
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //Log.d("JSON", json);
+    }
 
+    public static String nameAsFile(String name){
+        return String.format("recipe_%s.json", name.replaceAll("\\s+", "_").toLowerCase());
+    }
+    public void updateRecipe(int position, String newName){
+        Gson gson = new Gson();
+        File file = new File(getFilesDir(),nameAsFile(recipes.get(position).getName()));
+        file.delete();
+        if(!recipes.get(position).getName().toLowerCase().equals(newName.toLowerCase())) {
+            recipes.get(position).setName(newName);
+            file.renameTo(new File(getFilesDir(),nameAsFile(newName)));
+        }
+        String json = gson.toJson(recipes.get(position));
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(nameAsFile(newName), Context.MODE_PRIVATE));
+            outputStreamWriter.write(json);
+            outputStreamWriter.close();
+            Log.d("FILEEDIT", "Success");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void clearPrivateStorage(){
+        File[] files = getFilesDir().listFiles();
+        for (File file : files){
+            file.delete();
+        }
+    }
+
+    public File getFile(int position){
+        File file = new File(getFilesDir(),nameAsFile(recipes.get(position).getName()));
+        return file;
+    }
+    private String readFromFile(String file) {
+        String ret = "";
+        try {
+            Log.d("IMPORT", "3");
+            FileInputStream inputStream = openFileInput(file);
+            Log.d("IMPORT", "4");
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(receiveString);
+                }
+                ret = stringBuilder.toString();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("Read JSON", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("Read JSON", "Error reading file: " + e.toString());
+        }
+        return ret;
+    }
+
+    public void importFile(Context context, Uri uri){
+        Gson gson = new Gson();
+        StringBuilder content = new StringBuilder();
+        try {
+            ContentResolver contentResolver = context.getContentResolver();
+            InputStream inputStream = contentResolver.openInputStream(uri);
+            if (inputStream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line).append("\n");
+                }
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Recipe recipe = gson.fromJson(content.toString(),Recipe.class);
+        addRecipe(recipe);
+    }
+
+
+    private void listInitFromFile(){
+        Gson gson = new Gson();
+        File[] files = getFilesDir().listFiles();
+        for (File file : files){
+            if (file.getName().matches("^recipe_.*\\.json$")){
+                Log.d("FILEFOUND", file.getName());
+                recipes.add(gson.fromJson(readFromFile(file.getName()), Recipe.class));
+            }
+        }
+    }
+
+
+    private void initializeList(){
+        Recipe pizza = new Recipe("Pizza with gots   and peppers");
+        Recipe burger = new Recipe("Burger");
         pizza.addIngredient("Flour", (float)100.55555555, "g");
         pizza.addIngredient("Water", (float)100, "mL");
         pizza.addIngredient("Soda", (float)100, "mL");

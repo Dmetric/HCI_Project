@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingHorizontal="16dp"
-    app:cardCornerRadius="32dp">
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:paddingHorizontal="16dp"
+        app:cardCornerRadius="32dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,28 +66,33 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:orientation="horizontal"
             android:paddingHorizontal="8dp"
             android:paddingTop="8dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelButton"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/red"
-                android:insetRight="16dp"
                 android:text="Cancel"
                 app:icon="@drawable/cancel"
                 app:iconGravity="textStart" />
 
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addButton"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/green"
-                android:insetLeft="16dp"
                 android:text="ADD"
                 app:icon="@drawable/add"
                 app:iconGravity="textStart" />
@@ -83,3 +100,10 @@
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1" />
+</LinearLayout>

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="READ_EXTERNAL_STORAGE"/>
     <application
         android:name=".ClientApplication"
         android:allowBackup="true"
@@ -25,5 +26,15 @@
         </activity>
         <activity android:name=".activities.RecipeViewer"/>
         <activity android:name=".activities.RecipeEditor"/>
+        <provider
+            android:authorities="com.application.hci_project.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 </manifest>

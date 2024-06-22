@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.application.hci_project.ClientApplication;
 import com.application.hci_project.R;
@@ -126,6 +128,17 @@ public class RecipeViewer extends AppCompatActivity {
                 dialogBinding.shareButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Get the URI of your JSON file (replace 'fileItem' with your actual file)
+                        Uri uri = FileProvider.getUriForFile(getActivity(), "com.application.hci_project.fileprovider", ((ClientApplication)getActivity().getApplication()).getFile(position));
+
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.setType("application/json");
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        // Display the Sharesheet
+                        Intent chooserIntent = Intent.createChooser(shareIntent, "Share JSON file");
+                        startActivity(chooserIntent);
                         dialog.dismiss();
                     }
                 });

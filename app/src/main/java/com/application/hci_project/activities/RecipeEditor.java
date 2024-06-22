@@ -54,7 +54,6 @@ public class RecipeEditor extends AppCompatActivity {
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         if (intent.getSerializableExtra("type").toString().equals("Edit")) {
-            Log.d("EDITOR", "Got inside");
             position = (int) intent.getSerializableExtra("recipe");
             recipe = ((ClientApplication) getActivity().getApplication()).getRecipe(position);
             instructions = new ArrayList<Instruction>(recipe.getInstructions());
@@ -278,12 +277,14 @@ public class RecipeEditor extends AppCompatActivity {
                 dialogBinding.editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        recipe.setName(recipeName);
                         recipe.setIngredients(ingredients);
                         recipe.setInstructions(instructions);
                         if (position == -1)
                             ((ClientApplication) getActivity().getApplication()).addRecipe(recipe);
+                        else
+                            ((ClientApplication)getActivity().getApplication()).updateRecipe(position,recipeName);
                         setResult(1);
+                        dialog.dismiss();
                         getActivity().finish();
                     }
                 });
@@ -295,6 +296,7 @@ public class RecipeEditor extends AppCompatActivity {
                         } else {
                             setResult(2);
                             ((ClientApplication) getActivity().getApplication()).removeRecipe(position);
+                            dialog.dismiss();
                             getActivity().finish();
                         }
                     }
