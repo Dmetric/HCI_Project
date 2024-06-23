@@ -12,8 +12,8 @@
     app:contentPaddingLeft="8dp"
     app:contentPaddingRight="8dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -24,15 +24,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Step. " />
+            android:text="step"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/instructionTxt"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingRight="4dp"
-            android:text="instruction" />
+            android:text="instruction"
+            app:layout_constraintEnd_toStartOf="@+id/timerButton"
+            app:layout_constraintStart_toEndOf="@+id/instructionNumber"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/timerButton"
@@ -44,10 +49,13 @@
             android:clickable="true"
             android:foreground="@drawable/rippledrawable"
             android:foregroundTint="@color/grey_d"
+            android:paddingHorizontal="16dp"
             android:scaleType="center"
-            android:visibility="gone"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/timer"
             app:tint="@color/grey_d" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

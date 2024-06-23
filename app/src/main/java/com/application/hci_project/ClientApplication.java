@@ -66,7 +66,7 @@ public class ClientApplication extends Application {
             public void onInit(int i) {
                 if (i == TextToSpeech.SUCCESS) {
                     tts.setLanguage(Locale.ENGLISH);
-                    tts.setVoice(new Voice("en-gb-x-gbb-network",Locale.UK,Voice.QUALITY_HIGH,Voice.LATENCY_HIGH,false,null)); // el-gr-x-vfz-network en-gb-x-gbb-network
+                    tts.setVoice(new Voice("en-gb-x-gbb-network",Locale.UK,Voice.QUALITY_HIGH,Voice.LATENCY_VERY_HIGH,false,null)); // el-gr-x-vfz-network en-gb-x-gbb-network
                     Log.d("TTS", "Initialized");
                 } else {
                     // Failed to initialize TTS engine.
