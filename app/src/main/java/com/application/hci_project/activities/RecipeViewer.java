@@ -24,6 +24,7 @@ import com.application.hci_project.ClientApplication;
 import com.application.hci_project.R;
 import com.application.hci_project.adapters.IngredientListAdapter;
 import com.application.hci_project.adapters.InstructionListAdapter;
+import com.application.hci_project.databinding.RecipeEditorBinding;
 import com.application.hci_project.databinding.RecipeViewerBinding;
 import com.application.hci_project.databinding.ViewerOptionsBinding;
 import com.application.hci_project.datatypes.Recipe;
@@ -55,7 +56,6 @@ public class RecipeViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tts=getApp().getTts();
-
     }
 
     private ClientApplication getApp() {
@@ -65,8 +65,33 @@ public class RecipeViewer extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        binding = RecipeViewerBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+
+        switch (getApp().getSize()){
+            case 0:
+                this.setTheme(R.style.FontSizeSmall);
+                binding = RecipeViewerBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.recipeNameTXT.setTextAppearance(R.style.FontSizeMedium);
+                binding.ingredientsTxt.setTextAppearance(R.style.FontSizeMedium);
+                binding.stepsTxt.setTextAppearance(R.style.FontSizeMedium);
+                break;
+            case 1:
+                this.setTheme(R.style.FontSizeMedium);
+                binding = RecipeViewerBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.recipeNameTXT.setTextAppearance(R.style.FontSizeLarge);
+                binding.ingredientsTxt.setTextAppearance(R.style.FontSizeLarge);
+                binding.stepsTxt.setTextAppearance(R.style.FontSizeLarge);
+                break;
+            case 2:
+                this.setTheme(R.style.FontSizeLarge);
+                binding = RecipeViewerBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.recipeNameTXT.setTextAppearance(R.style.FontSizeLarge);
+                binding.ingredientsTxt.setTextAppearance(R.style.FontSizeLarge);
+                binding.stepsTxt.setTextAppearance(R.style.FontSizeLarge);
+                break;
+        }
         Intent intent = getIntent();
         position = (int) intent.getSerializableExtra("recipe");
         //Get Recipe from extras
@@ -76,11 +101,11 @@ public class RecipeViewer extends AppCompatActivity {
         binding.recipeNameTXT.setText(recipe.getName());
 
         //Add Adapter to Ingredient List
-        ingredientListAdapter=new IngredientListAdapter(getActivity(), recipe.getIngredients(),tts);
+        ingredientListAdapter=new IngredientListAdapter(getActivity(), recipe.getIngredients(),tts,getApp().isTTSEnabled());
         binding.ingredientListView.setAdapter(ingredientListAdapter);
 
         //Add Adapter to Instruction List
-        instructionListAdapter=new InstructionListAdapter(getActivity(), recipe.getInstructions(), tts);
+        instructionListAdapter=new InstructionListAdapter(getActivity(), recipe.getInstructions(), tts,getApp().isTTSEnabled());
         binding.instructionListView.setAdapter(instructionListAdapter);
 
         //Collapse for cards
@@ -118,14 +143,16 @@ public class RecipeViewer extends AppCompatActivity {
         binding.ingredientsTxt.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Ingredients",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak("Ingredients",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
         binding.stepsTxt.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Instructions",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak("Instructions",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
@@ -133,7 +160,8 @@ public class RecipeViewer extends AppCompatActivity {
         binding.recipeNameTXT.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak(recipe.getName(),TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak(recipe.getName(),TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
@@ -183,7 +211,8 @@ public class RecipeViewer extends AppCompatActivity {
                 dialogBinding.editButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Edit Recipe", TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Edit Recipe", TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -191,7 +220,8 @@ public class RecipeViewer extends AppCompatActivity {
                 dialogBinding.shareButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Share Recipe", TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Share Recipe", TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
