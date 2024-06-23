@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.application.hci_project.ClientApplication;
 import com.application.hci_project.R;
 import com.application.hci_project.activities.RecipeEditor;
 import com.application.hci_project.databinding.AddIngredientDialogBinding;
@@ -33,12 +35,15 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
     private LayoutInflater inflater;
     private Context context;
 
+    private TextToSpeech tts;
+
     private ArrayList<Ingredient> ingredients;
 
-    public EditorIngredientAdapter(Context context, ArrayList<Ingredient> ingredients) {
+    public EditorIngredientAdapter(Context context, ArrayList<Ingredient> ingredients, TextToSpeech tts) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.ingredients = ingredients;
+        this.tts=tts;
     }
 
     @Override
@@ -118,6 +123,15 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
             //quantity.setPadding(8,0,4,0);
             measurement.setText(ingredient.getMeasurement());
             name.setText(ingredient.getName());
+
+            cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    tts.speak(String.format("%s %s, %s",ingredient.quantityToString(),ClientApplication.getMeasurements().get(ingredient.getMeasurement()),ingredient.getName()),TextToSpeech.QUEUE_FLUSH,null,null);
+                    return true;
+                }
+            });
+
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -168,6 +182,46 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
                             //notifyItemRemoved(position);
                             notifyDataSetChanged();
                             dialog.dismiss();
+                        }
+                    });
+                    binding.addButton.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            tts.speak("Save changes to ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
+                            return true;
+                        }
+                    });
+
+                    binding.cancelButton.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            tts.speak("Delete ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
+                            return true;
+                        }
+                    });
+
+                    binding.ingredientNameInput.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            tts.speak( binding.ingredientNameInput.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
+                            return true;
+                        }
+                    });
+
+                    binding.quantityInput.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if(!binding.quantityInput.getText().toString().isEmpty())
+                                tts.speak(Ingredient.floatToString(Float.parseFloat(binding.quantityInput.getText().toString())),TextToSpeech.QUEUE_FLUSH,null,null);
+                            return true;
+                        }
+                    });
+
+                    binding.measurementSpinner.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            tts.speak(ClientApplication.getMeasurements().get(binding.measurementSpinner.getSelectedItem().toString()),TextToSpeech.QUEUE_FLUSH,null,null);
+                            return true;
                         }
                     });
                     dialog.show();

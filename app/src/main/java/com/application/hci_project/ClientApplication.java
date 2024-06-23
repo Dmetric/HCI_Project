@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import com.application.hci_project.datatypes.Recipe;
@@ -20,23 +21,62 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class ClientApplication extends Application {
     private ArrayList<Recipe> recipes= new ArrayList<Recipe>();
 
+    private static HashMap<String, String> measurements =
+            new HashMap<String, String>(){{
+                put("","");
+                put("tsp","teaspoon");
+                put("tbsp","tablespoon");
+                put("cup","cup");
+                put("mL","millilitres");
+                put("L","litres");
+                put("mg","milligrams");
+                put("g","grams");
+                put("kg","kilograms");
+    }};
+    private TextToSpeech tts;
+
+
     @Override
     public void onCreate() {
         super.onCreate();
+
 //        this.initializeList();
 //        clearPrivateStorage();
 //        for(Recipe recipe: recipes){
 //            saveToInternalStorage(recipe);
 //        }
         listInitFromFile();
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i == TextToSpeech.SUCCESS) {
+                    tts.setLanguage(Locale.ENGLISH);
+                    tts.setVoice(new ArrayList<>(tts.getVoices()).get(7)); //F (2,9) M(7) Normal,6 Italian, 37 38 58 85 (105 greek)
+                    Log.d("TTS", "Initialized");
+                } else {
+                    // Failed to initialize TTS engine.
+                    Log.d("TTS", "Failed initialization");
+                }
+            }
+        });
     }
 
     public ArrayList<Recipe> getRecipes() {
         return recipes;
+    }
+
+    public static HashMap<String, String> getMeasurements() {
+        return measurements;
+    }
+
+    public TextToSpeech getTts() {
+        return tts;
     }
 
     public Recipe getRecipe(int i){
@@ -184,7 +224,6 @@ public class ClientApplication extends Application {
             }
         }
     }
-
 
     private void initializeList(){
         Recipe pizza = new Recipe("Pizza with gots   and peppers");

@@ -5,6 +5,7 @@ import static androidx.core.content.ContextCompat.startActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.AlarmClock;
+import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,10 @@ import com.application.hci_project.datatypes.Instruction;
 import java.util.ArrayList;
 
 public class InstructionListAdapter extends ArrayAdapter<Instruction> {
-    public InstructionListAdapter(@NonNull Context context, ArrayList<Instruction> instructionList) {
+    private TextToSpeech tts;
+    public InstructionListAdapter(@NonNull Context context, ArrayList<Instruction> instructionList, TextToSpeech tts) {
         super(context, R.layout.instruction_item, instructionList);
+        this.tts=tts;
     }
 
     @NonNull
@@ -44,6 +47,20 @@ public class InstructionListAdapter extends ArrayAdapter<Instruction> {
         text.setText(instruction.getDescription());
         step.setText(Integer.toString(position+1)+". ");
 
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                tts.speak(String.format("Step %d, %s",position+1,instruction.getDescription()),TextToSpeech.QUEUE_FLUSH,null,null);
+                return true;
+            }
+        });
+        timer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                tts.speak("Start timer",TextToSpeech.QUEUE_FLUSH,null,null);
+                return true;
+            }
+        });
         timer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

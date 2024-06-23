@@ -1,63 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/addRecipeCardView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/alpha"
-    app:cardCornerRadius="32dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_weight="0.2" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Recipe Name:" />
-
-        <EditText
-            android:id="@+id/recipeNameInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:maxLength="200" />
+        app:cardCornerRadius="32dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingHorizontal="8dp"
-            android:paddingTop="8dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp">
 
-            <Button
-                android:id="@+id/cancelRecipeButton"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/red"
-                android:insetRight="4dp"
-                android:text="Cancel"
-                app:icon="@drawable/cancel"
-                app:iconGravity="textStart" />
+                android:text="Recipe Name:" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/addRecipeButton"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/recipeNameInput"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/green"
-                android:insetLeft="4dp"
-                android:text="Create"
-                app:icon="@drawable/add"
-                app:iconGravity="textStart" />
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:maxLength="200" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp"
+                android:paddingTop="8dp">
+
+                <Button
+                    android:id="@+id/cancelRecipeButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/red"
+                    android:text="Cancel"
+                    app:icon="@drawable/cancel"
+                    app:iconGravity="textStart" />
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addRecipeButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/green"
+                    android:text="Create"
+                    app:icon="@drawable/add"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2" />
+</LinearLayout>

@@ -1,6 +1,9 @@
 package com.application.hci_project.datatypes;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public class Ingredient implements Serializable {
     private String name;
@@ -36,6 +39,17 @@ public class Ingredient implements Serializable {
         this.measurement = measurement;
     }
 
+    public String quantityToString(){
+        DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        df.setMaximumFractionDigits(340);
+        return df.format(quantity);
+    }
+
+    public static String floatToString(float f){
+        DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        df.setMaximumFractionDigits(340);
+        return df.format(f);
+    }
     @Override
     public String toString() {
         return "Ingredient{" +

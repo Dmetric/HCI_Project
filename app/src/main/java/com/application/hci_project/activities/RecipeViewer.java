@@ -1,12 +1,14 @@
 package com.application.hci_project.activities;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -32,6 +34,8 @@ public class RecipeViewer extends AppCompatActivity {
     private int position;
     private IngredientListAdapter ingredientListAdapter;
     private InstructionListAdapter instructionListAdapter;
+    
+    private TextToSpeech tts;
 
     private ActivityResultLauncher<Intent> activityResultLauncher =
             registerForActivityResult(
@@ -50,6 +54,12 @@ public class RecipeViewer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tts=getApp().getTts();
+
+    }
+
+    private ClientApplication getApp() {
+        return (ClientApplication)getActivity().getApplication();
     }
 
     @Override
@@ -60,17 +70,17 @@ public class RecipeViewer extends AppCompatActivity {
         Intent intent = getIntent();
         position = (int) intent.getSerializableExtra("recipe");
         //Get Recipe from extras
-        recipe = ((ClientApplication) getActivity().getApplication()).getRecipe(position);
+        recipe = getApp().getRecipe(position);
 
         //Set Recipe name to TextView
         binding.recipeNameTXT.setText(recipe.getName());
 
         //Add Adapter to Ingredient List
-        ingredientListAdapter=new IngredientListAdapter(getActivity(), recipe.getIngredients());
+        ingredientListAdapter=new IngredientListAdapter(getActivity(), recipe.getIngredients(),tts);
         binding.ingredientListView.setAdapter(ingredientListAdapter);
 
         //Add Adapter to Instruction List
-        instructionListAdapter=new InstructionListAdapter(getActivity(), recipe.getInstructions());
+        instructionListAdapter=new InstructionListAdapter(getActivity(), recipe.getInstructions(), tts);
         binding.instructionListView.setAdapter(instructionListAdapter);
 
         //Collapse for cards
@@ -104,6 +114,32 @@ public class RecipeViewer extends AppCompatActivity {
             }
         });
 
+        //Text to speech
+        binding.ingredientsTxt.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                tts.speak("Ingredients",TextToSpeech.QUEUE_FLUSH,null,null);
+                return true;
+            }
+        });
+        binding.stepsTxt.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                tts.speak("Instructions",TextToSpeech.QUEUE_FLUSH,null,null);
+                return true;
+            }
+        });
+
+        binding.recipeNameTXT.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                tts.speak(recipe.getName(),TextToSpeech.QUEUE_FLUSH,null,null);
+                return true;
+            }
+        });
+
+
+        //Options
         binding.optButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,6 +176,23 @@ public class RecipeViewer extends AppCompatActivity {
                         Intent chooserIntent = Intent.createChooser(shareIntent, "Share JSON file");
                         startActivity(chooserIntent);
                         dialog.dismiss();
+                    }
+                });
+
+                //Text to speech
+                dialogBinding.editButton.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        tts.speak("Edit Recipe", TextToSpeech.QUEUE_FLUSH,null,null);
+                        return true;
+                    }
+                });
+
+                dialogBinding.shareButton.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        tts.speak("Share Recipe", TextToSpeech.QUEUE_FLUSH,null,null);
+                        return true;
                     }
                 });
             }

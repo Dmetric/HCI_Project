@@ -2,6 +2,7 @@ package com.application.hci_project.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +20,10 @@ import com.application.hci_project.datatypes.Recipe;
 import java.util.ArrayList;
 
 public class RecipeListAdapter extends ArrayAdapter<Recipe> {
-    public RecipeListAdapter(@NonNull Context context, ArrayList<Recipe> recipeList) {
+    private TextToSpeech tts;
+    public RecipeListAdapter(@NonNull Context context, ArrayList<Recipe> recipeList, TextToSpeech tts) {
         super(context, R.layout.recipe_item, recipeList);
+        this.tts = tts;
     }
 
     @NonNull
@@ -33,6 +36,13 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
         Button button = view.findViewById(R.id.recipeNameTXT);
         button.setText(recipe.getName());
         button.setTag(position);
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                tts.speak(getItem(position).getName(),TextToSpeech.QUEUE_FLUSH,null,null);
+                return true;
+            }
+        });
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

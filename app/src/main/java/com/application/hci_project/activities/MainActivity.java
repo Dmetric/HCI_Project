@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Toast;
-
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -23,18 +23,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.application.hci_project.ClientApplication;
-import com.application.hci_project.databinding.ActivityMainBinding;
 import com.application.hci_project.adapters.RecipeListAdapter;
+import com.application.hci_project.databinding.ActivityMainBinding;
 import com.application.hci_project.databinding.AddRecipeDialogBinding;
 import com.application.hci_project.datatypes.Recipe;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private RecipeListAdapter recipeListAdapter;
     private ArrayList<Recipe> recipes;
-    
+
+    private TextToSpeech tts;
+
     private ClientApplication getApp(){
         return (ClientApplication)this.getApplication();
     }
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
+        tts=getApp().getTts();
     }
 
     @Override
@@ -73,10 +76,24 @@ public class MainActivity extends AppCompatActivity {
         recipes = getApp().getRecipes();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        recipeListAdapter =new RecipeListAdapter(getActivity(), recipes);
+        recipeListAdapter =new RecipeListAdapter(getActivity(), recipes,tts);
         binding.recipeListView.setAdapter(recipeListAdapter);
         Log.d("Status", "working");
 
+        binding.addRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                tts.speak("Add new recipe",TextToSpeech.QUEUE_FLUSH,null,null);
+                return true;
+            }
+        });
+        binding.importRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                tts.speak("Import a recipe from file",TextToSpeech.QUEUE_FLUSH,null,null);
+                return true;
+            }
+        });
         binding.addRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,13 +110,34 @@ public class MainActivity extends AppCompatActivity {
                                     // Allow backspace
                                     return src;
                                 }
-                                if (src.toString().matches("[a-zA-Z0-9]+")) {
+                                if (src.toString().matches("[a-zA-Z0-9-\\s]+")) {
                                     // Allow only letters and numbers
                                     return src;
                                 }
                                 return ""; // Reject other characters
                             }
                         }
+                });
+                dialogBinding.addRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        tts.speak("Create Recipe",TextToSpeech.QUEUE_FLUSH,null,null);
+                        return true;
+                    }
+                });
+                dialogBinding.cancelRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        tts.speak("Cancel",TextToSpeech.QUEUE_FLUSH,null,null);
+                        return true;
+                    }
+                });
+                dialogBinding.recipeNameInput.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        tts.speak(dialogBinding.recipeNameInput.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
+                        return true;
+                    }
                 });
                 dialogBinding.addRecipeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
