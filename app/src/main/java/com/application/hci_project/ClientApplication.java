@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.util.Log;
 
 import com.application.hci_project.datatypes.Recipe;
@@ -65,7 +66,7 @@ public class ClientApplication extends Application {
             public void onInit(int i) {
                 if (i == TextToSpeech.SUCCESS) {
                     tts.setLanguage(Locale.ENGLISH);
-                    tts.setVoice(new ArrayList<>(tts.getVoices()).get(7)); //F (2,9) M(7) Normal,6 Italian, 37 38 58 85 (105 greek)
+                    tts.setVoice(new Voice("en-gb-x-gbb-network",Locale.UK,Voice.QUALITY_HIGH,Voice.LATENCY_HIGH,false,null)); // el-gr-x-vfz-network en-gb-x-gbb-network
                     Log.d("TTS", "Initialized");
                 } else {
                     // Failed to initialize TTS engine.

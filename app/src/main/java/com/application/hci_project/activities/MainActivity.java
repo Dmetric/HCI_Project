@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -121,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
         binding.importRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if(getApp().isTTSEnabled())      
+                int i = 0;
+                if(getApp().isTTSEnabled())
                     tts.speak("Import a recipe from file",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
