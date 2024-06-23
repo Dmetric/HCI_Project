@@ -67,34 +67,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingHorizontal="8dp"
             android:paddingTop="8dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/cancelButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/red"
-                android:text="Cancel"
-                app:icon="@drawable/cancel"
-                app:iconGravity="textStart" />
-
-            <View
-                android:id="@+id/divider3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.1" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/addButton"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/green"
                 android:text="ADD"
                 app:icon="@drawable/add"
+                app:iconGravity="textStart" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/red"
+                android:text="Cancel"
+                app:icon="@drawable/cancel"
                 app:iconGravity="textStart" />
 
         </LinearLayout>

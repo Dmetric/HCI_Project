@@ -20,6 +20,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.application.hci_project.ClientApplication;
 import com.application.hci_project.R;
 import com.application.hci_project.activities.RecipeEditor;
 import com.application.hci_project.databinding.AddIngredientDialogBinding;
@@ -35,16 +36,16 @@ public class EditorInstructionAdapter extends RecyclerView.Adapter<EditorInstruc
 
     private LayoutInflater inflater;
     private Context context;
-
     private TextToSpeech tts;
-    
+    private Boolean ttsEnabled;    
     private ArrayList<Instruction> instructions;
 
-    public EditorInstructionAdapter(Context context, ArrayList<Instruction> instructions, TextToSpeech tts) {
+    public EditorInstructionAdapter(Context context, ArrayList<Instruction> instructions, TextToSpeech tts, Boolean ttsEnabled) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.instructions=instructions;
         this.tts=tts;
+        this.ttsEnabled=ttsEnabled;
     }
 
     @Override
@@ -128,6 +129,7 @@ public class EditorInstructionAdapter extends RecyclerView.Adapter<EditorInstruc
             cardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    if(ttsEnabled)
                     tts.speak(String.format("Step %d, %s",position+1,instruction.getDescription()),TextToSpeech.QUEUE_FLUSH,null,null);
                     return true;
                 }
@@ -202,7 +204,8 @@ public class EditorInstructionAdapter extends RecyclerView.Adapter<EditorInstruc
                     binding.addButton.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            tts.speak("Save changes to instruction",TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(ttsEnabled)      
+                    tts.speak("Save changes to instruction",TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });
@@ -210,7 +213,8 @@ public class EditorInstructionAdapter extends RecyclerView.Adapter<EditorInstruc
                     binding.cancelButton.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            tts.speak("Delete instruction",TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(ttsEnabled)      
+                    tts.speak("Delete instruction",TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });
@@ -218,7 +222,8 @@ public class EditorInstructionAdapter extends RecyclerView.Adapter<EditorInstruc
                     binding.instructionInput.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            tts.speak(binding.instructionInput.getText().toString(), TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(ttsEnabled)      
+                    tts.speak(binding.instructionInput.getText().toString(), TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });
@@ -229,9 +234,11 @@ public class EditorInstructionAdapter extends RecyclerView.Adapter<EditorInstruc
                             int minutes = RecipeEditor.getNumber(binding.editMin.getText().toString());
                             int seconds = RecipeEditor.getNumber(binding.editSec.getText().toString());
                             if (binding.timeCheckbox.isChecked())
-                                tts.speak(String.format("%d hours %d minutes and %d seconds",hours, minutes, seconds), TextToSpeech.QUEUE_FLUSH,null,null);
+                                if(ttsEnabled)
+                    tts.speak(String.format("%d hours %d minutes and %d seconds",hours, minutes, seconds), TextToSpeech.QUEUE_FLUSH,null,null);
                             else
-                                tts.speak("Timer is turned off", TextToSpeech.QUEUE_FLUSH,null,null);
+                                if(ttsEnabled)      
+                    tts.speak("Timer is turned off", TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });

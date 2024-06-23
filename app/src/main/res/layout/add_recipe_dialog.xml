@@ -43,33 +43,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingTop="8dp">
 
-                <Button
-                    android:id="@+id/cancelRecipeButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/red"
-                    android:text="Cancel"
-                    app:icon="@drawable/cancel"
-                    app:iconGravity="textStart" />
-                <View
-                    android:id="@+id/divider1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.1" />
-
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/addRecipeButton"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="@color/green"
                     android:text="Create"
                     app:icon="@drawable/add"
+                    app:iconGravity="textStart" />
+
+                <Button
+                    android:id="@+id/cancelRecipeButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/red"
+                    android:text="Cancel"
+                    app:icon="@drawable/cancel"
                     app:iconGravity="textStart" />
 
             </LinearLayout>

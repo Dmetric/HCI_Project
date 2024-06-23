@@ -24,9 +24,11 @@ import java.util.Locale;
 
 public class IngredientListAdapter extends ArrayAdapter<Ingredient> {
     private TextToSpeech tts;
-    public IngredientListAdapter(@NonNull Context context, ArrayList<Ingredient> ingredientList, TextToSpeech tts) {
+    private Boolean ttsEnabled;
+    public IngredientListAdapter(@NonNull Context context, ArrayList<Ingredient> ingredientList, TextToSpeech tts, Boolean ttsEnabled) {
         super(context, R.layout.ingredient_item, ingredientList);
         this.tts=tts;
+        this.ttsEnabled=ttsEnabled;
 
     }
 
@@ -46,7 +48,8 @@ public class IngredientListAdapter extends ArrayAdapter<Ingredient> {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak(String.format("%s %s, %s", ingredient.quantityToString(), ClientApplication.getMeasurements().get(ingredient.getMeasurement()), ingredient.getName()),TextToSpeech.QUEUE_FLUSH,null,null);
+                if(ttsEnabled)
+                    tts.speak(String.format("%s %s, %s", ingredient.quantityToString(), ClientApplication.getMeasurements().get(ingredient.getMeasurement()), ingredient.getName()),TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });

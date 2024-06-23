@@ -24,6 +24,7 @@ import com.application.hci_project.R;
 import com.application.hci_project.adapters.EditorIngredientAdapter;
 import com.application.hci_project.adapters.EditorInstructionAdapter;
 import com.application.hci_project.adapters.IngredientListAdapter;
+import com.application.hci_project.databinding.ActivityMainBinding;
 import com.application.hci_project.databinding.AddIngredientDialogBinding;
 import com.application.hci_project.databinding.AddInstructionDialogBinding;
 import com.application.hci_project.databinding.AddRecipeDialogBinding;
@@ -54,9 +55,33 @@ public class RecipeEditor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tts = getApp().getTts();
-        binding = RecipeEditorBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
         Intent intent = getIntent();
+        switch (getApp().getSize()){
+            case 0:
+                this.setTheme(R.style.FontSizeSmall);
+                binding = RecipeEditorBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.recipeNameTXT.setTextAppearance(R.style.FontSizeMedium);
+                binding.ingredientsTxt.setTextAppearance(R.style.FontSizeMedium);
+                binding.stepsTxt.setTextAppearance(R.style.FontSizeMedium);
+                break;
+            case 1:
+                this.setTheme(R.style.FontSizeMedium);
+                binding = RecipeEditorBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.recipeNameTXT.setTextAppearance(R.style.FontSizeLarge);
+                binding.ingredientsTxt.setTextAppearance(R.style.FontSizeLarge);
+                binding.stepsTxt.setTextAppearance(R.style.FontSizeLarge);
+                break;
+            case 2:
+                this.setTheme(R.style.FontSizeLarge);
+                binding = RecipeEditorBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.recipeNameTXT.setTextAppearance(R.style.FontSizeLarge);
+                binding.ingredientsTxt.setTextAppearance(R.style.FontSizeLarge);
+                binding.stepsTxt.setTextAppearance(R.style.FontSizeLarge);
+                break;
+        }
         if (intent.getSerializableExtra("type").toString().equals("Edit")) {
             position = (int) intent.getSerializableExtra("recipe");
             recipe = getApp().getRecipe(position);
@@ -75,7 +100,7 @@ public class RecipeEditor extends AppCompatActivity {
         //Setup recycler for instructions
         binding.instructionRecycler.setLayoutManager(new LinearLayoutManager(this));
         binding.instructionRecycler.addItemDecoration(new Divider(10, 10));
-        instructionAdapter = new EditorInstructionAdapter(this, instructions, tts);
+        instructionAdapter = new EditorInstructionAdapter(this, instructions, tts, getApp().isTTSEnabled());
         ItemTouchHelper.Callback callbackInstructions = new RecyclerReorderCallback(instructionAdapter);
         ItemTouchHelper touchHelperInstructions = new ItemTouchHelper(callbackInstructions);
         touchHelperInstructions.attachToRecyclerView(binding.instructionRecycler);
@@ -84,7 +109,7 @@ public class RecipeEditor extends AppCompatActivity {
         //Setup recycler for ingredients
         binding.ingredientRecycler.setLayoutManager(new LinearLayoutManager(this));
         binding.ingredientRecycler.addItemDecoration(new Divider(10, 10));
-        ingredientAdapter = new EditorIngredientAdapter(this, ingredients,tts);
+        ingredientAdapter = new EditorIngredientAdapter(this, ingredients,tts, getApp().isTTSEnabled());
         ItemTouchHelper.Callback callbackIngredients = new RecyclerReorderCallback(ingredientAdapter);
         ItemTouchHelper touchHelperIngredients = new ItemTouchHelper(callbackIngredients);
         touchHelperIngredients.attachToRecyclerView(binding.ingredientRecycler);
@@ -211,7 +236,8 @@ public class RecipeEditor extends AppCompatActivity {
                 ingredientDialogBinding.addButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Add ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Add ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -219,7 +245,8 @@ public class RecipeEditor extends AppCompatActivity {
                 ingredientDialogBinding.cancelButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Cancel",TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Cancel",TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -227,7 +254,8 @@ public class RecipeEditor extends AppCompatActivity {
                 ingredientDialogBinding.ingredientNameInput.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak( ingredientDialogBinding.ingredientNameInput.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak( ingredientDialogBinding.ingredientNameInput.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -236,7 +264,8 @@ public class RecipeEditor extends AppCompatActivity {
                     @Override
                     public boolean onLongClick(View view) {
                         if(!ingredientDialogBinding.quantityInput.getText().toString().isEmpty())
-                            tts.speak(Ingredient.floatToString(Float.parseFloat(ingredientDialogBinding.quantityInput.getText().toString())),TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(getApp().isTTSEnabled())      
+                    tts.speak(Ingredient.floatToString(Float.parseFloat(ingredientDialogBinding.quantityInput.getText().toString())),TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -244,7 +273,8 @@ public class RecipeEditor extends AppCompatActivity {
                 ingredientDialogBinding.measurementSpinner.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak(ClientApplication.getMeasurements().get(ingredientDialogBinding.measurementSpinner.getSelectedItem().toString()),TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak(ClientApplication.getMeasurements().get(ingredientDialogBinding.measurementSpinner.getSelectedItem().toString()),TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -302,7 +332,8 @@ public class RecipeEditor extends AppCompatActivity {
                 instructionDialogBinding.addButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Add instruction",TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Add instruction",TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -310,7 +341,8 @@ public class RecipeEditor extends AppCompatActivity {
                 instructionDialogBinding.cancelButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Cancel",TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Cancel",TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -318,7 +350,8 @@ public class RecipeEditor extends AppCompatActivity {
                 instructionDialogBinding.instructionInput.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak(instructionDialogBinding.instructionInput.getText().toString(), TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak(instructionDialogBinding.instructionInput.getText().toString(), TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -329,9 +362,11 @@ public class RecipeEditor extends AppCompatActivity {
                         int minutes = getNumber(instructionDialogBinding.editMin.getText().toString());
                         int seconds = getNumber(instructionDialogBinding.editSec.getText().toString());
                         if (instructionDialogBinding.timeCheckbox.isChecked())
-                            tts.speak(String.format("%d hours %d minutes and %d seconds",hours, minutes, seconds), TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(getApp().isTTSEnabled())      
+                    tts.speak(String.format("%d hours %d minutes and %d seconds",hours, minutes, seconds), TextToSpeech.QUEUE_FLUSH,null,null);
                         else
-                            tts.speak("Timer is turned off", TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(getApp().isTTSEnabled())      
+                    tts.speak("Timer is turned off", TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -341,28 +376,32 @@ public class RecipeEditor extends AppCompatActivity {
         binding.ingredientsTxt.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Ingredients",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak("Ingredients",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
         binding.stepsTxt.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Instructions",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak("Instructions",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
         binding.editRecipeName.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Edit recipe name",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak("Edit recipe name",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
         binding.recipeNameTXT.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak(recipe.getName(),TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak(recipe.getName(),TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
@@ -370,7 +409,8 @@ public class RecipeEditor extends AppCompatActivity {
         binding.addIngredientButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Add ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak("Add ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
@@ -378,7 +418,8 @@ public class RecipeEditor extends AppCompatActivity {
         binding.addInstructionButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Add instruction",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak("Add instruction",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
@@ -434,14 +475,16 @@ public class RecipeEditor extends AppCompatActivity {
                 dialogBinding.editButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Save recipe",TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Save recipe",TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
                 dialogBinding.shareButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Delete recipe",TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Delete recipe",TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });

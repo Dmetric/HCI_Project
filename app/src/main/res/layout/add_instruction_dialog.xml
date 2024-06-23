@@ -66,8 +66,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:gravity="center"
-                    android:text="Hours:"
-                    android:textSize="18sp"
+                    android:text="H:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/timeCheckbox"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -80,10 +79,11 @@
                 <EditText
                     android:id="@+id/editHour"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:ems="2"
+                    android:gravity="center"
                     android:inputType="number"
                     android:max="59"
                     android:maxLength="2"
@@ -98,8 +98,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:gravity="center"
-                    android:text="Min:"
-                    android:textSize="18sp"
+                    android:text="M:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/editHour"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -107,10 +106,11 @@
                 <EditText
                     android:id="@+id/editMin"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:ems="2"
+                    android:gravity="center"
                     android:inputType="number"
                     android:max="59"
                     android:maxLength="2"
@@ -125,8 +125,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:gravity="center"
-                    android:text="Sec:"
-                    android:textSize="18sp"
+                    android:text="S:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/editMin"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -134,10 +133,11 @@
                 <EditText
                     android:id="@+id/editSec"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:ems="2"
+                    android:gravity="center"
                     android:inputType="number"
                     android:max="59"
                     android:maxLength="2"
@@ -149,34 +149,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingTop="8dp">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/cancelButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/red"
-                    android:text="Cancel"
-                    app:icon="@drawable/cancel"
-                    app:iconGravity="textStart" />
-
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.1" />
-
-                <com.google.android.material.button.MaterialButton
                     android:id="@+id/addButton"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="@color/green"
                     android:text="ADD"
                     app:icon="@drawable/add"
+                    app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancelButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/red"
+                    android:text="Cancel"
+                    app:icon="@drawable/cancel"
                     app:iconGravity="textStart" />
 
             </LinearLayout>

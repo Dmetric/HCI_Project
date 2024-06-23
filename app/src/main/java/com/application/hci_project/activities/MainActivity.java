@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -23,24 +24,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.application.hci_project.ClientApplication;
+import com.application.hci_project.R;
 import com.application.hci_project.adapters.RecipeListAdapter;
+import com.application.hci_project.databinding.AccessibiltyOptionsDialogBinding;
 import com.application.hci_project.databinding.ActivityMainBinding;
 import com.application.hci_project.databinding.AddRecipeDialogBinding;
 import com.application.hci_project.datatypes.Recipe;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private RecipeListAdapter recipeListAdapter;
     private ArrayList<Recipe> recipes;
-
     private TextToSpeech tts;
 
     private ClientApplication getApp(){
         return (ClientApplication)this.getApplication();
     }
+
     private ActivityResultLauncher<Intent> activityResultLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
@@ -63,34 +65,64 @@ public class MainActivity extends AppCompatActivity {
         return this;
     }
 
+    private void checkSettings(){
+        Log.d("SIZE",Integer.toString(getApp().getSize()));
+        switch (getApp().getSize()){
+            case 0:
+                this.setTheme(R.style.FontSizeSmall);
+                binding = ActivityMainBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.nameTXT.setTextAppearance(R.style.FontSizeMedium);
+                break;
+            case 1:
+                this.setTheme(R.style.FontSizeMedium);
+                binding = ActivityMainBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.nameTXT.setTextAppearance(R.style.FontSizeLarge);
+                break;
+            case 2:
+                this.setTheme(R.style.FontSizeLarge);
+                binding = ActivityMainBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+                binding.nameTXT.setTextAppearance(R.style.FontSizeMedium);
+                break;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         tts=getApp().getTts();
+        checkSettings();
     }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        getApp().destroy();
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
         recipes = getApp().getRecipes();
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
         recipeListAdapter =new RecipeListAdapter(getActivity(), recipes,tts);
         binding.recipeListView.setAdapter(recipeListAdapter);
         Log.d("Status", "working");
-
         binding.addRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Add new recipe",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())
+                    tts.speak("Add new recipe",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
         binding.importRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Import a recipe from file",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(getApp().isTTSEnabled())      
+                    tts.speak("Import a recipe from file",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
@@ -121,21 +153,24 @@ public class MainActivity extends AppCompatActivity {
                 dialogBinding.addRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Create Recipe",TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Create Recipe",TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
                 dialogBinding.cancelRecipeButton.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak("Cancel",TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak("Cancel",TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
                 dialogBinding.recipeNameInput.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        tts.speak(dialogBinding.recipeNameInput.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
+                        if(getApp().isTTSEnabled())      
+                    tts.speak(dialogBinding.recipeNameInput.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
                         return true;
                     }
                 });
@@ -176,6 +211,47 @@ public class MainActivity extends AppCompatActivity {
                 chooseFileIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 chooseFileIntent = Intent.createChooser(chooseFileIntent, "Choose a file");
                 activityResultLauncher.launch(chooseFileIntent);
+            }
+        });
+
+        //Accessibility Options
+        binding.optButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog dialog = new Dialog(getActivity());
+                dialog.setCancelable(true);
+                AccessibiltyOptionsDialogBinding dialogBinding = AccessibiltyOptionsDialogBinding.inflate(getLayoutInflater());
+                dialog.setContentView(dialogBinding.getRoot());
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.show();
+                dialogBinding.ttsSwitch.setChecked(getApp().isTTSEnabled());
+                switch (getApp().getSize()){
+                    case 0:
+                        dialogBinding.size1.setChecked(true);
+                        break;
+                    case 1:
+                        dialogBinding.size2.setChecked(true);
+                        break;
+                    case 2:
+                        dialogBinding.size3.setChecked(true);
+                        break;
+                }
+                dialogBinding.applySettings.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int selection = dialogBinding.sizeSelection.getCheckedButtonId();
+                        Log.d("SELECTOR", Boolean.toString(dialogBinding.size1.getId()==selection));
+                        getApp().setTTS(dialogBinding.ttsSwitch.isChecked());
+                        if(dialogBinding.size1.getId()==selection)
+                            getApp().setSize(0);
+                        else if (dialogBinding.size2.getId()==selection)
+                            getApp().setSize(1);
+                        else
+                            getApp().setSize(2);
+                        dialog.dismiss();
+                        getActivity().recreate();
+                    }
+                });
             }
         });
     }

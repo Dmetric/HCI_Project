@@ -24,8 +24,10 @@
             android:lines="1"
             android:scrollbarStyle="insideOverlay"
             android:scrollbars="horizontal"
+            android:text="Recipe name goes here"
             android:textColor="@color/design_default_color_on_primary"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/opt_button"

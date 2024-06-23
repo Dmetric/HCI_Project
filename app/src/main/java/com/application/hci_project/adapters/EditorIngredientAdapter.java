@@ -34,16 +34,17 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
 
     private LayoutInflater inflater;
     private Context context;
-
+    private Boolean ttsEnabled;
     private TextToSpeech tts;
-
     private ArrayList<Ingredient> ingredients;
 
-    public EditorIngredientAdapter(Context context, ArrayList<Ingredient> ingredients, TextToSpeech tts) {
+
+    public EditorIngredientAdapter(Context context, ArrayList<Ingredient> ingredients, TextToSpeech tts, Boolean ttsEnabled) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.ingredients = ingredients;
         this.tts=tts;
+        this.ttsEnabled=ttsEnabled;
     }
 
     @Override
@@ -127,6 +128,7 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
             cardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    if(ttsEnabled)      
                     tts.speak(String.format("%s %s, %s",ingredient.quantityToString(),ClientApplication.getMeasurements().get(ingredient.getMeasurement()),ingredient.getName()),TextToSpeech.QUEUE_FLUSH,null,null);
                     return true;
                 }
@@ -187,7 +189,8 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
                     binding.addButton.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            tts.speak("Save changes to ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(ttsEnabled)      
+                    tts.speak("Save changes to ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });
@@ -195,7 +198,8 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
                     binding.cancelButton.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            tts.speak("Delete ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(ttsEnabled)      
+                    tts.speak("Delete ingredient",TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });
@@ -203,7 +207,8 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
                     binding.ingredientNameInput.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            tts.speak( binding.ingredientNameInput.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(ttsEnabled)      
+                    tts.speak( binding.ingredientNameInput.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });
@@ -212,7 +217,8 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
                         @Override
                         public boolean onLongClick(View view) {
                             if(!binding.quantityInput.getText().toString().isEmpty())
-                                tts.speak(Ingredient.floatToString(Float.parseFloat(binding.quantityInput.getText().toString())),TextToSpeech.QUEUE_FLUSH,null,null);
+                                if(ttsEnabled)      
+                    tts.speak(Ingredient.floatToString(Float.parseFloat(binding.quantityInput.getText().toString())),TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });
@@ -220,7 +226,8 @@ public class EditorIngredientAdapter extends RecyclerView.Adapter<EditorIngredie
                     binding.measurementSpinner.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            tts.speak(ClientApplication.getMeasurements().get(binding.measurementSpinner.getSelectedItem().toString()),TextToSpeech.QUEUE_FLUSH,null,null);
+                            if(ttsEnabled)      
+                    tts.speak(ClientApplication.getMeasurements().get(binding.measurementSpinner.getSelectedItem().toString()),TextToSpeech.QUEUE_FLUSH,null,null);
                             return true;
                         }
                     });

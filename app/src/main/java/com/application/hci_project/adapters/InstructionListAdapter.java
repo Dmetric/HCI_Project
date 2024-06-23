@@ -26,9 +26,12 @@ import java.util.ArrayList;
 
 public class InstructionListAdapter extends ArrayAdapter<Instruction> {
     private TextToSpeech tts;
-    public InstructionListAdapter(@NonNull Context context, ArrayList<Instruction> instructionList, TextToSpeech tts) {
+    private boolean ttsEnabled;
+
+    public InstructionListAdapter(@NonNull Context context, ArrayList<Instruction> instructionList, TextToSpeech tts, Boolean ttsEnabled) {
         super(context, R.layout.instruction_item, instructionList);
         this.tts=tts;
+        this.ttsEnabled=ttsEnabled;
     }
 
     @NonNull
@@ -50,14 +53,16 @@ public class InstructionListAdapter extends ArrayAdapter<Instruction> {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak(String.format("Step %d, %s",position+1,instruction.getDescription()),TextToSpeech.QUEUE_FLUSH,null,null);
+                if(ttsEnabled)      
+                    tts.speak(String.format("Step %d, %s",position+1,instruction.getDescription()),TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });
         timer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                tts.speak("Start timer",TextToSpeech.QUEUE_FLUSH,null,null);
+                if(ttsEnabled)      
+                    tts.speak("Start timer",TextToSpeech.QUEUE_FLUSH,null,null);
                 return true;
             }
         });

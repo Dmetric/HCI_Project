@@ -3,6 +3,7 @@ package com.application.hci_project;
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -14,19 +15,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
 public class ClientApplication extends Application {
     private ArrayList<Recipe> recipes= new ArrayList<Recipe>();
-
+    private Boolean ttsEnabled;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    private int size;
     private static HashMap<String, String> measurements =
             new HashMap<String, String>(){{
                 put("","");
@@ -45,7 +47,13 @@ public class ClientApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        preferences =getSharedPreferences(this.getPackageName(),MODE_PRIVATE);
+        editor= preferences.edit();
+        if(preferences.contains("size"))Log.d("APP", "size found");
+        if(preferences.contains("tts"))Log.d("APP", "tts found");
 
+        size=preferences.getInt("size",1);
+        ttsEnabled=preferences.getBoolean("tts",true);
 //        this.initializeList();
 //        clearPrivateStorage();
 //        for(Recipe recipe: recipes){
@@ -65,6 +73,30 @@ public class ClientApplication extends Application {
                 }
             }
         });
+    }
+
+//    public void destroy(){
+//        tts.shutdown();
+//    }
+
+    public Boolean isTTSEnabled() {
+        return ttsEnabled;
+    }
+
+    public void setTTS(Boolean ttsEnabled) {
+        this.ttsEnabled = ttsEnabled;
+        editor.putBoolean("tts",ttsEnabled);
+        editor.apply();
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+        editor.putInt("size",size);
+        editor.apply();
     }
 
     public ArrayList<Recipe> getRecipes() {
